@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Country Info</title>
+</head>
+<body>
+  <h1>Country Information</h1>
+  <input type="text" id="countryName" placeholder="Enter country name" />
+  <button id="fetchInfo">Get Info</button>
+  <div id="result" style="margin-top: 20px;">
+    <!-- Result will appear here -->
+  </div>
+
+  <script>
+    document.getElementById('fetchInfo').addEventListener('click', async () => {
+      const countryName = document.getElementById('countryName').value.trim();
+      if (!countryName) {
+        alert('Please enter a country name');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/country/${countryName}`);
+        if (!response.ok) {
+          throw new Error('Country not found');
+        }
+        const data = await response.json();
+        document.getElementById('result').innerHTML = `
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Capital:</strong> ${data.capital}</p>
+          <p><strong>Population:</strong> ${data.population}</p>
+          <p><strong>Region:</strong> ${data.region}</p>
+        `;
+      } catch (error) {
+        document.getElementById('result').innerHTML = `<p style="color: red;">${error.message}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
